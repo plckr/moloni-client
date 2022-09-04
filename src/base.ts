@@ -15,27 +15,19 @@ type InitConfig = {
 }
 
 export abstract class Base {
-  private config: InitConfig
   private companyId?: number
-  private apiUrl: string
   private credentials?: AuthResponse
+  private credentialsExpiresAt?: Date
 
-  constructor(config: InitConfig) {
-    this.config = config
-    this.apiUrl = !!config.sandbox ? sandboxUrl : apiUrl
-  }
+  constructor(private config: InitConfig) {}
 
   public setCompanyId(id: number) {
     this.companyId = id
     return this
   }
 
-  private get expiresIn() {
-    const secondsMargin = 10
-    if (!this.credentials?.expires_in) return null
-    return new Date(
-      Date.now() + (this.credentials.expires_in - secondsMargin) * 1000
-    )
+  private get apiUrl() {
+    return !!this.config.sandbox ? sandboxUrl : apiUrl
   }
 
   protected async request<T>(
@@ -43,9 +35,8 @@ export abstract class Base {
     params?: Record<string, any>
   ): Promise<T> {
     if (
-      !this.credentials ||
-      !this.credentials.access_token ||
-      this.expiresIn < new Date()
+      !this.credentials?.access_token ||
+      this.credentialsExpiresAt < new Date()
     ) {
       await this.authenticate()
     }
@@ -109,6 +100,12 @@ export abstract class Base {
 
       const credentials = (await res.json()) as AuthResponse
       this.credentials = credentials
+
+      const secondsMargin = 10
+      this.credentialsExpiresAt = new Date(
+        Date.now() + (credentials.expires_in - secondsMargin) * 1000
+      )
+
       return credentials
     } catch (e) {
       throw new Error(e)
