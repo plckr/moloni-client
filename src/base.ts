@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-unfetch'
 import * as qs from 'querystringify'
-import { AuthResponse, ErrorResponse } from 'types'
+import { AuthResponse, ErrorResponse } from './types'
 
 const apiBaseUrl = 'https://api.moloni.pt'
 const sandboxUrl = `${apiBaseUrl}/sandbox`

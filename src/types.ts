@@ -18,3 +18,5 @@ export type AuthResponse = {
   scope: null
   refresh_token: string
 }
+
+export type MoloniError = string[]
