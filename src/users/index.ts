@@ -1,11 +1,7 @@
 import { Base } from '../base'
-import {
-  UsersEndpoint,
-  UsersParams,
-  UsersResponse,
-} from './types/myProfile.types'
+import { UsersEndpoint, UsersParams, UsersResponse } from './types/users.types'
 
-export class AccountProfile extends Base {
+export class Users extends Base {
   async users<T extends UsersEndpoint>(
     request: T,
     params?: UsersParams<T>

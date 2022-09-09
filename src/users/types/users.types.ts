@@ -44,25 +44,34 @@ type UsersRequest = {
   getMe: {
     params: {}
     response:
-      | {
-          user_id: number
-          user_group_id: number
-          salesman_id: number
-          name: string
-          email: string
-          cellphone: string
-          language_id: number
-          language: {
-            language_id: number
-            code: string
-            title: string
-          }
+      | (User & {
           num_companies: number
-          registered_since: string
-          last_login: string
-        }
+        })
       | MoloniError
   }
+  getAll: {
+    params: {
+      company_id: number
+    }
+    response: User[]
+  }
+}
+
+type User = {
+  user_id: number
+  user_group_id: number
+  salesman_id: number
+  name: string
+  email: string
+  cellphone: string
+  language_id: number
+  language: {
+    language_id: number
+    code: string
+    title: string
+  }
+  registered_since: string
+  last_login: string
 }
 
 export type UsersEndpoint = keyof UsersRequest
