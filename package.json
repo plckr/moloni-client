@@ -1,6 +1,7 @@
 {
   "name": "moloni-client",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "description": "A typescript client for Moloni ERP",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
   "umd:main": "dist/index.umd.js",
@@ -30,5 +31,10 @@
     "nock": "^13.2.9",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.8"
-  }
+  },
+  "keywords": [
+    "typescript",
+    "moloni",
+    "javascript"
+  ]
 }
