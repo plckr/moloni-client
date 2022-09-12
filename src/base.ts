@@ -1,6 +1,6 @@
-import fetch from 'isomorphic-unfetch'
 import * as qs from 'querystringify'
-import { AuthResponse, ErrorResponse } from './types'
+import { AuthErrorResponse, AuthResponse, ErrorResponse } from './types'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 
 const apiBaseUrl = 'https://api.moloni.pt'
 const sandboxUrl = `${apiBaseUrl}/sandbox`
@@ -48,9 +48,9 @@ export abstract class Base {
     const url = this.apiUrl + endpoint + stringifiedParams
     const body = qs.stringify({ company_id: this.companyId, ...params })
 
-    const config: RequestInit = {
+    const config: AxiosRequestConfig = {
       method: 'POST',
-      body,
+      data: body,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': Buffer.byteLength(body).toString(),
@@ -58,13 +58,12 @@ export abstract class Base {
     }
 
     try {
-      const res = await fetch(url, config)
-      if (!res.ok) {
-        throw new Error(res.statusText)
-      }
-      const data = await res.json()
+      const { data } = await axios(url, config)
       return data
     } catch (e) {
+      if (axios.isAxiosError(e)) {
+        throw new Error(e.message)
+      }
       throw new Error(e)
     }
   }
@@ -82,7 +81,7 @@ export abstract class Base {
 
     const url = `${this.apiUrl}/grant${stringifiedParams}`
 
-    const config: RequestInit = {
+    const config: AxiosRequestConfig = {
       method: 'GET',
       headers: {
         Accept: '*/*',
@@ -91,14 +90,9 @@ export abstract class Base {
     }
 
     try {
-      const res = await fetch(url, config)
-      if (!res.ok) {
-        const err = (await res.json()) as ErrorResponse
-        console.error(err)
-        return err
-      }
+      const { data } = await axios(url, config)
 
-      const credentials = (await res.json()) as AuthResponse
+      const credentials = data as AuthResponse
       this.credentials = credentials
 
       const secondsMargin = 10
@@ -108,7 +102,11 @@ export abstract class Base {
 
       return credentials
     } catch (e) {
-      throw new Error(e)
+      if (axios.isAxiosError(e)) {
+        const data = e.response.data as AuthErrorResponse
+        throw new Error(data.error_description || e.message)
+      }
+      throw new Error(e.message)
     }
   }
 }

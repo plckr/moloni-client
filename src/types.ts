@@ -1,4 +1,4 @@
-export type ErrorResponse = {
+export type AuthErrorResponse = {
   error:
     | 'invalid_client'
     | 'invalid_uri'

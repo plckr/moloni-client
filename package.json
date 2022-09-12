@@ -15,7 +15,7 @@
   "author": "Ricardo Reis <rdev@rsrl.eu>",
   "license": "MIT",
   "dependencies": {
-    "isomorphic-unfetch": "^3.1.0",
+    "axios": "^0.27.2",
     "querystringify": "^2.2.0"
   },
   "devDependencies": {
