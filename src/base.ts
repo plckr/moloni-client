@@ -1,6 +1,6 @@
 import * as qs from 'querystringify'
-import { AuthErrorResponse, AuthResponse, ErrorResponse } from './types'
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import { AuthErrorResponse, AuthResponse } from './types'
+import axios, { AxiosRequestConfig } from 'axios'
 
 const apiBaseUrl = 'https://api.moloni.pt'
 const sandboxUrl = `${apiBaseUrl}/sandbox`
