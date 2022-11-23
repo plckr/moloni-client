@@ -118,7 +118,7 @@ type ProductsRequest = {
   count: {
     params: {
       company_id: number
-      category_id: number
+      category_id?: number
     }
     response: {
       count: number
